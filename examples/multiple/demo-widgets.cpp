@@ -51,18 +51,18 @@ class DemoWindow
 
       ImGui::Checkbox("Show Labels##1", &show_labels);
       if (ImPlot::BeginPlot("##guides", 0, 0, ImVec2(-1, -1), ImPlotFlags_YAxis2)) {
-        ImPlot::DragLineX("x1", &x1, show_labels);
-        ImPlot::DragLineX("x2", &x2, show_labels);
-        ImPlot::DragLineY("y1", &y1, show_labels);
-        ImPlot::DragLineY("y2", &y2, show_labels);
+        ImPlot::DragLineX(0, &x1, ImVec4(1, 1, 1, 1), 1, flags);
+        ImPlot::DragLineX(1, &x2, ImVec4(1, 1, 1, 1), 1, flags);
+        ImPlot::DragLineY(2, &y1, ImVec4(1, 1, 1, 1), 1, flags);
+        ImPlot::DragLineY(3, &y2, ImVec4(1, 1, 1, 1), 1, flags);
         double xs[1000], ys[1000];
         for (int i = 0; i < 1000; ++i) {
           xs[i] = (x2 + x1) / 2 + abs(x2 - x1) * (i / 1000.0f - 0.5f);
           ys[i] = (y1 + y2) / 2 + abs(y2 - y1) / 2 * sin(f * i / 10);
         }
         ImPlot::PlotLine("Interactive Data", xs, ys, 1000);
-        ImPlot::SetPlotYAxis(ImPlotYAxis_2);
-        ImPlot::DragLineY("f", &f, show_labels, ImVec4(1, 0.5f, 1, 1));
+        ImPlot::SetAxis(ImAxis_Y2);
+        ImPlot::DragLineY(120482, &f, ImVec4(1, 0.5f, 1, 1), 1, flags, &clicked, &hovered, &held);
         ImPlot::EndPlot();
       }
     }
@@ -81,11 +81,15 @@ class DemoWindow
   ImVec4             clear_color = ImColor(114, 144, 154);
   QtImGui::RenderRef ref         = nullptr;
 
-  double         x1          = 0.2;
-  double         x2          = 0.8;
-  double         y1          = 0.25;
-  double         y2          = 0.75;
-  double         f           = 0.1;
+  inline static double x1 = 0.2;
+  inline static double x2 = 0.8;
+  inline static double y1 = 0.25;
+  inline static double y2 = 0.75;
+  inline static double f = 0.1;
+  bool clicked = true;
+  bool hovered = true;
+  bool held = true;
+
   bool           show_labels = true;
   ImPlotContext* ctx         = nullptr;
 };

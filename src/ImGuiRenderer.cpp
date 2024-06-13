@@ -5,6 +5,7 @@
 #include <QMouseEvent>
 #include <QClipboard>
 #include <QCursor>
+#include <QHash>
 
 #ifdef ANDROID
 #define GL_VERTEX_ARRAY_BINDING           0x85B5 // Missing in android as of May 2020
@@ -22,7 +23,7 @@ namespace QtImGui {
 namespace {
 
 // Keyboard mapping. Dear ImGui use those indices to peek into the io.KeysDown[] array.
-const QHash<int, ImGuiKey> keyMap = {
+const QHash<int, int> keyMap = {
     { Qt::Key_Tab, ImGuiKey_Tab },
     { Qt::Key_Left, ImGuiKey_LeftArrow },
     { Qt::Key_Right, ImGuiKey_RightArrow },
@@ -82,7 +83,7 @@ void ImGuiRenderer::initialize(WindowWrapper *window) {
     io.BackendPlatformName = "qtimgui";
     
     // Setup keyboard mapping
-    for (ImGuiKey key : keyMap.values()) {
+    for (const auto key : keyMap.values()) {
         io.KeyMap[key] = key;
     }
     
